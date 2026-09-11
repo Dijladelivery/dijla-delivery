@@ -1047,6 +1047,92 @@ max-height: 520px;
     footer {
         padding: 20px 10px;
     }
+}/* PHONE SIZE */
+@media (max-width: 600px) {
+
+    body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    header {
+        padding: 12px 10px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    nav a {
+        margin-left: 0;
+        font-size: 13px;
+    }
+
+    .hero {
+        padding: 45px 15px 70px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .tracking-box {
+        width: calc(100% - 30px);
+        margin: -30px auto 40px;
+        padding: 20px 15px;
+    }
+
+    .search {
+        flex-direction: column;
+    }
+
+    .search input,
+    .search button {
+        width: 100%;
+    }
+
+    .contact,
+    .services,
+    .why-us,
+    .how-it-works {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .contact-grid,
+    .service-grid,
+    .why-grid,
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    #map {
+        height: 300px;
+    }
+
+    .support-button {
+        right: 15px;
+    }
+
+    .support-box {
+        right: 15px;
+        width: calc(100% - 30px);
+    }
 }
 </style>
 </head>
