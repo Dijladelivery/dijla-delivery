@@ -1,0 +1,472 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIJLA DELIVERY - Admin</title><style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #07111f;
+        color: white;
+    }
+
+    header {
+        background: #0d1b2a;
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid #c9a227;
+    }
+
+    header h1 {
+        margin: 0;
+        color: #d4af37;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .card {
+        background: #102235;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+        color: #d4af37;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 6px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 8px;
+        background: #1b334a;
+        color: white;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 8px;
+        background: #d4af37;
+        color: #07111f;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #f0cc55;
+    }
+
+    #message {
+        margin-top: 20px;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .shipment {
+        background: white;
+        color: #111;
+        margin: 15px 0;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .shipment h3 {
+        margin-top: 0;
+        color: #0d1b2a;
+    }
+</style>
+
+</head><body><header>
+    <h1>DIJLA DELIVERY</h1>
+    <p>Admin Dashboard</p>
+    <a
+    href="/admin-logout"
+    style="
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #d4af37;
+        color: #07111f;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+    "
+>
+    Logout
+</a>
+</header><div class="container"><div class="card">
+    <h2>Create Shipment</h2>
+
+    <label>Tracking Code</label>
+    <input
+        type="text"
+        id="trackingCode"
+        placeholder="Example: DIJLA1002"
+    >
+
+    <label>Sender</label>
+    <input
+        type="text"
+        id="sender"
+        placeholder="Sender name"
+    >
+
+    <label>Receiver</label>
+    <input
+        type="text"
+        id="receiver"
+        placeholder="Receiver name"
+    >
+
+    <label>Origin</label>
+    <input
+        type="text"
+        id="origin"
+        placeholder="Example: Lagos, Nigeria"
+    >
+
+    <label>Destination</label>
+    <input
+        type="text"
+        id="destination"
+        placeholder="Example: Abuja, Nigeria"
+    >
+
+    <label>Current Location</label>
+    <input
+        type="text"
+        id="currentLocation"
+        placeholder="Current package location"
+    >
+
+    <label>Status</label>
+    <select id="status">
+        <option>Order Received</option>
+        <option>Picked Up</option>
+        <option>In Transit</option>
+        <option>At Destination</option>
+        <option>Out for Delivery</option>
+        <option>Delivered</option>
+    </select>
+
+    <label>Estimated Delivery</label>
+    <input
+        type="date"
+        id="estimatedDelivery"
+    >
+
+    <label>Map Latitude</label>
+    <input
+        type="number"
+        id="latitude"
+        placeholder="Example: 6.5244"
+        step="any"
+    >
+
+    <label>Map Longitude</label>
+    <input
+        type="number"
+        id="longitude"
+        placeholder="Example: 3.3792"
+        step="any"
+    >
+
+    <button onclick="createShipment()">
+        Create Shipment
+    </button>
+
+    <div id="message"></div>
+</div>
+
+<div class="card">
+    <h2>All Shipments</h2>
+    <div id="shipmentsList"></div>
+</div>
+<div class="card">
+    <h2>💬 Customer Support Chat</h2>
+
+    <div id="adminChatMessages" style="text-align: left;">
+    <p>Loading customer messages...</p>
+</div>
+
+    <div style="margin-top: 15px;">
+        <input
+            type="text"
+            id="adminChatInput"
+            placeholder="Type your reply..."
+            style="width: 100%; padding: 10px; box-sizing: border-box;"
+        >
+
+        <button
+            onclick="sendAdminReply()"
+            style="margin-top: 10px; padding: 10px 15px;"
+        >
+            Send Reply
+        </button>
+    </div>
+</div>
+
+</div><script>
+
+async function createShipment() {
+
+    const shipment = {
+        trackingCode: document.getElementById("trackingCode").value.trim(),
+        sender: document.getElementById("sender").value.trim(),
+        receiver: document.getElementById("receiver").value.trim(),
+        origin: document.getElementById("origin").value.trim(),
+        destination: document.getElementById("destination").value.trim(),
+        currentLocation: document.getElementById("currentLocation").value.trim(),
+        status: document.getElementById("status").value,
+        estimatedDelivery:
+            document.getElementById("estimatedDelivery").value || null,
+
+        latitude: document.getElementById("latitude").value
+            ? Number(document.getElementById("latitude").value)
+            : null,
+
+        longitude: document.getElementById("longitude").value
+            ? Number(document.getElementById("longitude").value)
+            : null
+    };
+
+    if (!shipment.trackingCode) {
+        document.getElementById("message").innerText =
+            "Please enter a tracking code.";
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/api/packages", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(shipment)
+        });
+
+        const data = await response.json();
+
+        document.getElementById("message").innerText =
+            data.message || "Shipment created.";
+
+        if (response.ok) {
+
+            document.getElementById("trackingCode").value = "";
+            document.getElementById("sender").value = "";
+            document.getElementById("receiver").value = "";
+            document.getElementById("origin").value = "";
+            document.getElementById("destination").value = "";
+            document.getElementById("currentLocation").value = "";
+            document.getElementById("estimatedDelivery").value = "";
+            document.getElementById("latitude").value = "";
+            document.getElementById("longitude").value = "";
+
+            await loadShipments();
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("message").innerText =
+            "Something went wrong.";
+    }
+}
+
+
+async function loadShipments() {
+
+    try {
+
+        const response = await fetch("/api/packages");
+
+        const packages = await response.json();
+
+        const section = document.getElementById("shipmentsList");
+
+        section.innerHTML = "";
+
+        const shipmentList = Object.values(packages);
+
+        if (shipmentList.length === 0) {
+
+            section.innerHTML = "<p>No shipments found.</p>";
+
+            return;
+        }
+
+        shipmentList.forEach(pkg => {
+
+            const shipment = document.createElement("div");
+
+            shipment.className = "shipment";
+
+            shipment.innerHTML = `
+                <h3>Tracking Code: ${pkg.trackingCode}</h3>
+                <button onclick="updateShipment('${pkg.trackingCode}')">Update Shipment</button>
+
+                <p><strong>Sender:</strong> ${pkg.sender || ""}</p>
+
+                <p><strong>Receiver:</strong> ${pkg.receiver || ""}</p>
+
+                <p><strong>Origin:</strong> ${pkg.origin || ""}</p>
+
+                <p><strong>Destination:</strong> ${pkg.destination || ""}</p>
+
+                <p><strong>Current Location:</strong> ${pkg.currentLocation || ""}</p>
+
+                <p><strong>Status:</strong> ${pkg.status || ""}</p>
+
+                <p><strong>Estimated Delivery:</strong> ${pkg.estimatedDelivery || "Not set"}</p>
+
+                <p><strong>Latitude:</strong> ${pkg.latitude ?? "Not set"}</p>
+
+                <p><strong>Longitude:</strong> ${pkg.longitude ?? "Not set"}</p>
+            `;
+
+            section.appendChild(shipment);
+        });
+
+    } catch (error) {
+
+        console.error("Error loading shipments:", error);
+
+        document.getElementById("shipmentsList").innerHTML =
+            "<p>Unable to load shipments.</p>";
+    }
+}
+
+
+async function updateShipment(code) {
+
+    const newStatus = prompt("Enter new shipment status:");
+    const newLocation = prompt("Enter new current location:");
+    const newLatitude = prompt("Enter new latitude:");
+const newLongitude = prompt("Enter new longitude:");
+
+    if (newStatus === null || newLocation === null) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/api/packages/" + code, {
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+    status: newStatus,
+    currentLocation: newLocation,
+    latitude: Number(newLatitude),
+    longitude: Number(newLongitude)
+})
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if (response.ok) {
+            await loadShipments();
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to update shipment.");
+    }
+}
+loadShipments();
+async function loadAdminChat() {
+    try {
+        const response = await fetch("/api/chat");
+        const messages = await response.json();
+
+        const chatBox = document.getElementById("adminChatMessages");
+
+        if (messages.length === 0) {
+            chatBox.innerHTML = "<p>No customer messages yet.</p>";
+            return;
+        }
+
+        chatBox.innerHTML = messages.map(msg => `
+            <div style="padding: 10px; margin-bottom: 10px; background: ${msg.sender === 'Admin' ? '#e8f0fe' : '#f5f5f5'}; color: #222; border-radius: 8px; border-left: 4px solid ${msg.sender === 'Admin' ? '#4285f4' : '#333'}; margin-left: ${msg.sender === 'Admin' ? '20%' : '0'}; margin-right: ${msg.sender === 'Admin' ? '0' : '20%'};">
+                <strong>${msg.sender}</strong>
+                <small>📦 Tracking: ${msg.trackingCode || "Not provided"}</small>
+                <p style="margin: 5px 0;">${msg.message}</p>
+                <small>${msg.createdAt}</small>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function sendAdminReply() {
+    const input = document.getElementById("adminChatInput");
+    const message = input.value.trim();
+
+    if (!message) {
+        alert("Please type a reply first.");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/chat/reply", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            input.value = "";
+            await loadAdminChat();
+            alert("Reply sent successfully!");
+        } else {
+            alert(data.message || "Unable to send reply.");
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to support.");
+    }
+}
+
+loadAdminChat();
+
+</script></body>
+</html>

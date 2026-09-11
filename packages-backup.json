@@ -1,0 +1,99 @@
+{
+  "DIJLA1001": {
+    "trackingCode": "DIJLA1001",
+    "sender": "DIJLA STORE",
+    "receiver": "John Doe",
+    "origin": "Lagos, Nigeria",
+    "destination": "Abuja, Nigeria",
+    "currentLocation": "Lagos, Nigeria",
+    "status": "In Transit",
+    "latitude": 6.5244,
+    "longitude": 3.3792
+  },
+  "DIJLA1002": {
+    "trackingCode": "DIJLA1002",
+    "sender": "Kim Grace",
+    "receiver": "Capless",
+    "origin": "UK",
+    "destination": "South Africa",
+    "currentLocation": "Syria, Damascus",
+    "status": "In Transit"
+  },
+  "DIJLA1100": {
+    "trackingCode": "DIJLA1100",
+    "sender": "Akpa",
+    "receiver": "kim",
+    "origin": "",
+    "destination": "south",
+    "currentLocation": "syria",
+    "status": "In Transit"
+  },
+  "DIJLA1003": {
+    "trackingCode": "DIJLA1003",
+    "sender": "kim",
+    "receiver": "grace",
+    "origin": "uk",
+    "destination": "syria",
+    "currentLocation": "south",
+    "status": "In Transit"
+  },
+  "DIJLA1004": {
+    "trackingCode": "DIJLA1004",
+    "sender": "DIJLA STORE",
+    "receiver": "jane Doe",
+    "origin": "lagos,nigeria",
+    "destination": "abuja,nigeria",
+    "currentLocation": "lagos,nigeria",
+    "status": "Order Received"
+  },
+  "DIJLA1005": {
+    "trackingCode": "DIJLA1005",
+    "sender": "GRACE",
+    "receiver": "chis",
+    "origin": "syria",
+    "destination": "south",
+    "currentLocation": "syria",
+    "status": "In Transit"
+  },
+  "DIJLA1009": {
+    "trackingCode": "DIJLA1009",
+    "sender": "Grace",
+    "receiver": "kim",
+    "origin": "syria",
+    "destination": "south africa",
+    "currentLocation": "syria",
+    "status": "In Transit"
+  },
+  "": {
+    "trackingCode": "",
+    "sender": "",
+    "receiver": "John doe",
+    "origin": "lagos,nigeria",
+    "destination": "abuja,nigeria",
+    "currentLocation": "lagos,nigeria",
+    "status": "Order Received"
+  },
+  "DIJLA1006": {
+    "trackingCode": "DIJLA1006",
+    "sender": "Kim",
+    "receiver": "christian",
+    "origin": "syria",
+    "destination": "south africa",
+    "currentLocation": "syria,damascus",
+    "status": "in transit",
+    "latitude": 6.7865,
+    "longitude": 3.3679
+  },
+  "DIJLA1008": {
+    "trackingCode": "DIJLA1008",
+    "sender": "KIM",
+    "receiver": "CHIS",
+    "origin": "SYRIA",
+    "destination": "SOUTH AFRICA",
+    "currentLocation": "SYRIA,DAMACUS",
+    "status": "IN TRANSIT",
+    "estimatedDelivery": "2026-09-11",
+    "latitude": 6.7686,
+    "longitude": 3.7868
+  }
+}
