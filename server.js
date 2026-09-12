@@ -69,6 +69,7 @@ app.use(session({
 }));
 
 app.get("/admin-login", (req, res) => {
+    const error = req.query.error;
     res.send(`
         <!DOCTYPE html>
 <html lang="en">
@@ -170,9 +171,17 @@ app.get("/admin-login", (req, res) => {
             Secure Administration Portal
         </div>
 
-        <h2>🔐 Admin Login</h2>
-
-        <form method="POST" action="/admin-login">
+        app.get("/admin-login", (req, res) => {
+    const error = req.query.error;
+    ${error === "incorrect" ? `
+    <div style="
+        color: #ff6b6b;
+        margin-bottom: 15px;
+        font-weight: bold;
+    ">
+        ❌ Incorrect password. Please try again.
+    </div>
+` : ""}
 
             <input
                 type="password"
@@ -206,7 +215,7 @@ app.post("/admin-login", (req, res) => {
         return res.redirect("/admin.html");
     }
 
-    res.send("Incorrect admin password. Please go back and try again.");
+    return res.redirect("/admin-login?error=incorrect");
 });
 app.get("/admin-logout", (req, res) => {
     req.session.destroy(() => {
