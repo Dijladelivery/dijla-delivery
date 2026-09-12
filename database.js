@@ -29,6 +29,11 @@ db.prepare(`
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     )
 `).run();
+const columns = db.prepare("PRAGMA table_info(messages)").all();
+
+if (!columns.some(column => column.name === "customerId")) {
+    db.prepare("ALTER TABLE messages ADD COLUMN customerId TEXT").run();
+}
 
 console.log("DIJLA DELIVERY chat database is ready.");
 module.exports = db;

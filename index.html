@@ -1625,6 +1625,8 @@ function showShipmentMap() {
     }
 
 async function sendSupportMessage() {
+    const customerId = sessionStorage.getItem("dijlaCustomerId") || crypto.randomUUID();
+sessionStorage.setItem("dijlaCustomerId", customerId);
     const nameInput = document.getElementById("supportNameInput");
     const name = nameInput.value.trim();
 
@@ -1664,6 +1666,9 @@ async function sendSupportMessage() {
     }
 }
 async function sendSupportMessage() {
+    const customerId = sessionStorage.getItem("dijlaCustomerId") || crypto.randomUUID();
+    sessionStorage.setItem("dijlaCustomerId", customerId);
+
     const nameInput = document.getElementById("supportNameInput");
 const name = nameInput.value.trim();
     const input = document.getElementById("supportMessageInput");
@@ -1685,10 +1690,11 @@ const name = nameInput.value.trim();
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                sender: name,
-                message: message,
-                trackingCode: document.getElementById("trackingCode")?.value || null
-            })
+    sender: name,
+    message: message,
+    trackingCode: document.getElementById("trackingCode")?.value || null,
+    customerId: customerId
+})
         });
 
         const data = await response.json();
@@ -1708,8 +1714,11 @@ const name = nameInput.value.trim();
 
 
 async function loadSupportChat() {
+    const customerId = sessionStorage.getItem("dijlaCustomerId") || crypto.randomUUID();
+    sessionStorage.setItem("dijlaCustomerId", customerId);
+
     try {
-        const response = await fetch("/api/chat");
+        const response = await fetch("/api/chat?customerId=" + encodeURIComponent(customerId));
         const messages = await response.json();
 
         const chatBox = document.getElementById("supportReply");

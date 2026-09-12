@@ -304,11 +304,31 @@ app.put("/api/packages/:code", (req, res) => {
         message: "Shipment updated successfully!"
     });
 });
+// DELETE SHIPMENT
+app.delete("/api/packages/:code", (req, res) => {
+    const packages = getPackages();
+
+    const code = req.params.code.toUpperCase();
+
+    if (!packages[code]) {
+        return res.status(404).json({
+            message: "Shipment not found."
+        });
+    }
+
+    delete packages[code];
+
+    savePackages(packages);
+
+    res.json({
+        message: "Shipment deleted successfully!"
+    });
+});
 
 // ==================== ONLINE SUPPORT CHAT ====================
 
 app.post("/api/chat", (req, res) => {
-    const { sender, message, trackingCode } = req.body;
+    const { sender, message, trackingCode, customerId } = req.body;
 
     if (!sender || !message) {
         return res.status(400).json({
@@ -317,14 +337,15 @@ app.post("/api/chat", (req, res) => {
     }
 
     const stmt = db.prepare(`
-        INSERT INTO messages (sender, message, trackingCode)
-        VALUES (?, ?, ?)
+        INSERT INTO messages (sender, message, trackingCode, customerId)
+VALUES (?, ?, ?, ?)
     `);
 
     stmt.run(
         sender,
         message,
-        trackingCode || null
+        trackingCode || null,
+customerId || null
     );
 
     res.json({
@@ -332,6 +353,19 @@ app.post("/api/chat", (req, res) => {
     });
 });
 app.get("/api/chat", (req, res) => {
+    const { customerId } = req.query;
+
+    if (customerId) {
+        const messages = db.prepare(`
+            SELECT *
+            FROM messages
+            WHERE customerId = ?
+            ORDER BY createdAt ASC
+        `).all(customerId);
+
+        return res.json(messages);
+    }
+
     const messages = db.prepare(`
         SELECT *
         FROM messages
@@ -341,7 +375,7 @@ app.get("/api/chat", (req, res) => {
     res.json(messages);
 });
 app.post("/api/chat/reply", (req, res) => {
-    const { message, trackingCode } = req.body;
+    const { message, trackingCode, customerId } = req.body;
 
     if (!message) {
         return res.status(400).json({
@@ -350,15 +384,16 @@ app.post("/api/chat/reply", (req, res) => {
     }
 
     const stmt = db.prepare(`
-        INSERT INTO messages (sender, message, trackingCode)
-        VALUES (?, ?, ?)
+        INSERT INTO messages (sender, message, trackingCode, customerId)
+VALUES (?, ?, ?, ?)
     `);
 
     stmt.run(
-        "Admin",
-        message,
-        trackingCode || null
-    );
+    "Admin",
+    message,
+    trackingCode || null,
+    customerId || null
+);
 
     res.json({
         message: "Reply sent successfully!"

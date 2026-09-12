@@ -93,6 +93,78 @@
         margin-top: 0;
         color: #0d1b2a;
     }
+    /* PHONE FRIENDLY ADMIN DASHBOARD */
+@media (max-width: 600px) {
+
+    header {
+        padding: 15px 10px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    header p {
+        font-size: 14px;
+    }
+
+    .container {
+        width: 100%;
+        margin: 20px auto;
+        padding: 12px;
+    }
+
+    .card {
+        padding: 18px 15px;
+        margin-bottom: 18px;
+        border-radius: 12px;
+    }
+
+    h2 {
+        font-size: 21px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        font-size: 16px;
+        padding: 13px;
+    }
+
+    button {
+        width: 100%;
+        padding: 13px 15px;
+    }
+
+    .shipment {
+        padding: 15px;
+        overflow-wrap: break-word;
+    }
+
+    .shipment h3 {
+        font-size: 17px;
+    }
+
+    #adminChatMessages {
+        width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    #adminChatInput {
+        width: 100% !important;
+        font-size: 16px;
+    }
+}
+/* MOBILE CHAT REPLY BUTTON */
+@media (max-width: 600px) {
+    #adminChatMessages button {
+        width: 100%;
+        margin-top: 8px;
+        padding: 10px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+}
 </style>
 
 </head><body><header>
@@ -327,6 +399,7 @@ async function loadShipments() {
             shipment.innerHTML = `
                 <h3>Tracking Code: ${pkg.trackingCode}</h3>
                 <button onclick="updateShipment('${pkg.trackingCode}')">Update Shipment</button>
+                <button onclick="deleteShipment('${pkg.trackingCode}')">Delete Shipment</button>
 
                 <p><strong>Sender:</strong> ${pkg.sender || ""}</p>
 
@@ -404,6 +477,15 @@ const newLongitude = prompt("Enter new longitude:");
     }
 }
 loadShipments();
+let selectedCustomerId = null;
+function selectCustomer(customerId) {
+    selectedCustomerId = customerId;
+
+    document.getElementById("adminChatInput").focus();
+
+    alert("Customer selected. Your next reply will go to this customer.");
+}
+
 async function loadAdminChat() {
     try {
         const response = await fetch("/api/chat");
@@ -420,6 +502,7 @@ async function loadAdminChat() {
             <div style="padding: 10px; margin-bottom: 10px; background: ${msg.sender === 'Admin' ? '#e8f0fe' : '#f5f5f5'}; color: #222; border-radius: 8px; border-left: 4px solid ${msg.sender === 'Admin' ? '#4285f4' : '#333'}; margin-left: ${msg.sender === 'Admin' ? '20%' : '0'}; margin-right: ${msg.sender === 'Admin' ? '0' : '20%'};">
                 <strong>${msg.sender}</strong>
                 <small>📦 Tracking: ${msg.trackingCode || "Not provided"}</small>
+                ${msg.customerId ? <button onclick="selectCustomer('${msg.customerId}')">Reply to this customer</button> : ""}
                 <p style="margin: 5px 0;">${msg.message}</p>
                 <small>${msg.createdAt}</small>
             </div>
@@ -438,6 +521,10 @@ async function sendAdminReply() {
         alert("Please type a reply first.");
         return;
     }
+    if (!selectedCustomerId) {
+    alert("Please select a customer before replying.");
+    return;
+}
 
     try {
         const response = await fetch("/api/chat/reply", {
@@ -446,8 +533,9 @@ async function sendAdminReply() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: message
-            })
+    message: message,
+    customerId: selectedCustomerId
+})
         });
 
         const data = await response.json();
@@ -463,6 +551,37 @@ async function sendAdminReply() {
     } catch (error) {
         console.error(error);
         alert("Unable to connect to support.");
+    }
+}
+async function deleteShipment(code) {
+
+    const confirmDelete = confirm(
+        "Are you sure you want to delete shipment " + code + "?"
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/api/packages/" + code, {
+            method: "DELETE"
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if (response.ok) {
+            await loadShipments();
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to delete shipment.");
     }
 }
 
