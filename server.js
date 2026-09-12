@@ -223,7 +223,9 @@ app.get("/admin.html", (req, res) => {
 app.use(express.static(__dirname, {
     index: false
 }));
-
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
 app.get("/track/:code", (req, res) => {
     const code = req.params.code.toUpperCase();
     const packages = getPackages();
