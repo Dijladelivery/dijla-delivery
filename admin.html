@@ -502,7 +502,7 @@ async function loadAdminChat() {
             <div style="padding: 10px; margin-bottom: 10px; background: ${msg.sender === 'Admin' ? '#e8f0fe' : '#f5f5f5'}; color: #222; border-radius: 8px; border-left: 4px solid ${msg.sender === 'Admin' ? '#4285f4' : '#333'}; margin-left: ${msg.sender === 'Admin' ? '20%' : '0'}; margin-right: ${msg.sender === 'Admin' ? '0' : '20%'};">
                 <strong>${msg.sender}</strong>
                 <small>📦 Tracking: ${msg.trackingCode || "Not provided"}</small>
-                ${msg.customerId ? <button onclick="selectCustomer('${msg.customerId}')">Reply to this customer</button> : ""}
+                ${msg.customerId ? "<button type=\"button\" onclick=\"selectCustomer('" + msg.customerId + "')\">Reply to this customer</button>" : ""}
                 <p style="margin: 5px 0;">${msg.message}</p>
                 <small>${msg.createdAt}</small>
             </div>
