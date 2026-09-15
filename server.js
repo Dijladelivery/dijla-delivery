@@ -171,8 +171,7 @@ app.get("/admin-login", (req, res) => {
             Secure Administration Portal
         </div>
 
-        app.get("/admin-login", (req, res) => {
-    const error = req.query.error;
+    
     ${error === "incorrect" ? `
     <div style="
         color: #ff6b6b;
@@ -183,6 +182,7 @@ app.get("/admin-login", (req, res) => {
     </div>
 ` : ""}
 
+<form method="POST" action="/admin-login">
             <input
                 type="password"
                 name="password"
